@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <!-- leaflet config -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <style>
+        #map {
+            height: 720px;
+        }
+    </style>
+    <!-- leaflet config -->
+</head>
+
+<body>
+    <h1>Database Query</h1>
+    <div id="map"></div>
+
+    <script>
+        //initialise tiles
+        var map = L.map('map').setView([0, 0], 1.5);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+        getData();
+
+        async function getData() {
+
+            const response = await fetch('/api');
+            const data = await response.json();
+
+            for (item of data) {
+                //initialise markers to each item of data
+                var marker = L.marker([item.lat, item.lon]).addTo(map);
+                // popup text
+               
+                const text = `name: ${item.name}<br/> 
+                    latitude: ${item.lat}º<br/>
+                    longitude: ${item.lon}º <br/>
+                    Conditions: ${item.weather.conditions} <br/>
+                    Temp: ${item.weather.temp}ºC <br/>
+                    AirQ Sensor: ${item.air.location} <br/>
+                    ${item.air.measurements[0].parameter}: ${item.air.measurements[0].value} ${item.air.measurements[0].unit}`;
+                //bind text to popup
+                marker.bindPopup(`<p>${text}</p> <img src = ${item.image64}>  `);
+                
+
+
+                // const root = document.createElement('p');
+                // const name = document.createElement('div');
+                // const date = document.createElement('div');
+
+                // const loc = document.createElement('div');
+                // const weather = document.createElement('div');
+                // const air = document.createElement('div');
+                // const img = document.createElement('img');
+
+                // name.textContent = `name: ${item.name}`;
+                // const dateString = new Date(item.timestamp).toLocaleString();
+                // date.textContent = dateString;
+
+                // loc.textContent = `location: ${item.lat}º, ${item.lon}º`;
+
+                // weather.textContent = `weather: ${item.weather}`
+                // air.textContent = `air: ${item.air}`
+
+                // img.src = item.image64;
+
+                // root.append(name, loc, date, weather, air, img);
+                // document.body.append(root);
+            }
+        }
+    </script>
+</body>
+
+</html>
