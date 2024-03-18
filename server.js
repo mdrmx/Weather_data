@@ -1,4 +1,5 @@
 const Datastore = require("nedb");
+const fetch = require("node-fetch");
 const express = require("express");
 const app = express();
 require("dotenv").config();
@@ -31,21 +32,24 @@ app.post("/api", (request, response) => {
 
 //week10 add weather api url
 app.get("/weather/:latlon", async (request, response) => {
-  const latlon = request.params.latlon.split(",");
-  const lat = latlon[0];
-  const lon = latlon[1];
-  const weather_api_key = process.env.API_KEY;
-  const weather_api_url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${lat}%2C%20${lon}?unitGroup=metric&key=${weather_api_key}&contentType=json`;
-  const weather_response = await fetch(weather_api_url);
-  const weather_data = await weather_response.json();
+  try {
+    const latlon = request.params.latlon.split(",");
+    const lat = latlon[0];
+    const lon = latlon[1];
+    const weather_api_key = process.env.API_KEY;
+    const weather_api_url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${lat}%2C%20${lon}?unitGroup=metric&key=${weather_api_key}&contentType=json`;
+    const weather_response = await fetch(weather_api_url);
+    const weather_data = await weather_response.json();
 
-  const airq_api_url = `https://api.openaq.org/v2/latest?radius=10000&coordinates=${lat},${lon}`;
-  const airq_response = await fetch(airq_api_url);
-  const airq_data = await airq_response.json();
-  const data = {
-    weather: weather_data,
-    air: airq_data,
-  };
-
-  response.json(data);
+    const airq_api_url = `https://api.openaq.org/v2/latest?radius=10000&coordinates=${lat},${lon}`;
+    const airq_response = await fetch(airq_api_url);
+    const airq_data = await airq_response.json();
+    const data = {
+      weather: weather_data,
+      air: airq_data,
+    };
+    response.json(data);
+  } catch (error) {
+    console.log(error);
+  }
 });
