@@ -29,10 +29,9 @@ app.post("/api", (request, response) => {
   response.json(data);
 });
 
+//week10 add weather api url
 app.get("/weather/:latlon", async (request, response) => {
-  //week10 add weather api url
   const latlon = request.params.latlon.split(",");
-
   const lat = latlon[0];
   const lon = latlon[1];
   const weather_api_key = process.env.API_KEY;

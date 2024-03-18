@@ -1,16 +1,17 @@
 {
-  "name": "w7_example_2",
+  "name": "geolocation_w_images",
   "version": "1.0.0",
-  "description": "geolocation app",
+  "description": "geolocation app based on Daniel Shiffman's working with APIs course",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js" 
   },
   "keywords": [
     "geolocation",
     "test"
   ],
-  "author": "stuart",
+  "author": "stuart haffenden",
   "license": "MIT",
   "dependencies": {
     "dotenv": "^16.4.5",
